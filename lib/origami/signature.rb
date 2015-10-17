@@ -442,7 +442,7 @@ module Origami
         pairs = self.to_a
         content = TOKENS.first + EOL
         
-        pairs.sort_by{ |k| k.to_s }.reverse.each do |pair|
+        pairs.sort_by{ |k| k[0].value }.reverse.each do |pair|
           key, value = pair[0].to_o, pair[1].to_o
             
           content << "\t" * indent + key.to_s + " " + (value.is_a?(Dictionary) ? value.to_s(indent + 1) : value.to_s) + EOL
@@ -458,7 +458,7 @@ module Origami
         pairs = self.to_a
         content = "#{no} #{generation} obj" + EOL + TOKENS.first + EOL
         
-        pairs.sort_by{ |k| k.to_s }.reverse.each do |pair|
+        pairs.sort_by{ |k| k[0].value }.reverse.each do |pair|
           key, value = pair[0].to_o, pair[1].to_o
           
           if key == :Contents
