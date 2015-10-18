@@ -107,18 +107,25 @@ module Origami
         @instructions << PDF::Instruction.new('cm', 1, 0, 0, 1, 0, 0)
       end
       if !translate.nil?
+        raise ArgumentError, ':x Argument must be numeric' unless translate[:x].is_a? Numeric
+        raise ArgumentError, ':y Argument must be numeric' unless translate[:y].is_a? Numeric
         @instructions << PDF::Instruction.new('cm', 1, 0, 0, 1, translate[:x], translate[:y])
       end
       if !rotate.nil?
+        raise ArgumentError, ':q Argument must be numeric' unless rotate[:q].is_a? Numeric
         q = rotate[:q] # angle counterclockwise from x axis in radians
         @instructions << PDF::Instruction.new('cm', cos(q), sin(q), -1 * sin(q), cos(q), 0, 0)
       end
       if !scale.nil?
+        raise ArgumentError, ':x Argument must be numeric' unless scale[:x].is_a? Numeric
+        raise ArgumentError, ':y Argument must be numeric' unless scale[:y].is_a? Numeric
         @instructions << PDF::Instruction.new('cm', scale[:x], 0, 0, scale[:y], 0, 0)
       end
       if !skew.nil?
         # a is angle of skew counterclockwise from x axis in radians
         # b is angle of skew clockwise from y axis in radians
+        raise ArgumentError, ':a Argument must be numeric' unless skew[:a].is_a? Numeric
+        raise ArgumentError, ':b Argument must be numeric' unless skew[:b].is_a? Numeric
         @instructions << PDF::Instruction.new('cm', 1, tan(skew[:a]), tan(skew[:b]), 1, 0, 0)
       end
       @instructions << PDF::Instruction.new('Do', name) # paint the xobject
