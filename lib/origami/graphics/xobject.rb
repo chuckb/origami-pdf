@@ -89,6 +89,44 @@ module Origami
       @instructions << PDF::Instruction.new('Q')
     end
 
+    def draw_dsblank
+      load! if @instructions.nil?
+      @instructions << PDF::Instruction.new("% DSBlank")
+      self
+    end
+
+    def draw_xobject(name, attr = {})
+      load! if @instructions.nil?
+
+      @instructions << PDF::Instruction.new('q') # queue up new graphic state
+      translate = attr[:translate]
+      scale = attr[:scale]
+      rotate = attr[:rotate]
+      skew = attr[:skew]
+      if translate.nil? && scale.nil? && rotate.nil? && skew.nil?	# unity transformation
+        @instructions << PDF::Instruction.new('cm', 1, 0, 0, 1, 0, 0)
+      end
+      if !translate.nil?
+        @instructions << PDF::Instruction.new('cm', 1, 0, 0, 1, translate[:x], translate[:y])
+      end
+      if !rotate.nil?
+        q = rotate[:q] # angle counterclockwise from x axis in radians
+        @instructions << PDF::Instruction.new('cm', cos(q), sin(q), -1 * sin(q), cos(q), 0, 0)
+      end
+      if !scale.nil?
+        @instructions << PDF::Instruction.new('cm', scale[:x], 0, 0, scale[:y], 0, 0)
+      end
+      if !skew.nil?
+        # a is angle of skew counterclockwise from x axis in radians
+        # b is angle of skew clockwise from y axis in radians
+        @instructions << PDF::Instruction.new('cm', 1, tan(skew[:a]), tan(skew[:b]), 1, 0, 0)
+      end
+      @instructions << PDF::Instruction.new('Do', name) # paint the xobject
+      @instructions << PDF::Instruction.new('Q') # restore original graphic state
+      self
+    end
+
+
     #
     # Draw a straight line from the point at coord _from_, to the point at coord _to_.
     #

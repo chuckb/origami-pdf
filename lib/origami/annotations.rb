@@ -206,6 +206,22 @@ module Origami
 
     end
 
+    class AppearanceNDictionary < ContentStream
+      include StandardObject
+      include ResourcesHolder
+
+      field   :Type,                  :Type => Name, :Default => :AppearanceNDictionary
+      field   :BBox,                  :Type => Array
+      field   :Resources,             :Type => Resources, :Required => true
+
+      def pre_build
+        self.Resources = Resources.new.pre_build unless has_field?(:Resources)
+
+        super
+      end
+
+    end
+
     class AppearanceStream < Graphics::FormXObject ; end
     
     class BorderStyle < Dictionary
