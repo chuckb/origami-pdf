@@ -27,7 +27,6 @@ class TC_PdfSigAppearance < Test::Unit::TestCase
     caption="Digitally Signed By: #{signedby}\nContact: #{contact}\nLocation: #{location}\nReason: #{reason}\nDate: #{date} "
 
     n0 = Graphics::FormXObject.new
-    n0.Matrix = [1, 0, 0, 1, 0, 0]
     n0.Type=Origami::Name.new("XObject")
     n0.BBox = [ 0, 0, box[:width], box[:height] ]
     n0.set_indirect(true)
@@ -38,7 +37,6 @@ class TC_PdfSigAppearance < Test::Unit::TestCase
 
     n2 = Graphics::FormXObject.new
     n2.Type=Origami::Name.new("XObject")
-    n2.Matrix = [1, 0, 0, 1, 0, 0]
     n2.Resources = Resources.new
     n2.Resources.ProcSet = [Origami::Name.new("Text")]
     n2.set_indirect(true)
@@ -49,11 +47,11 @@ class TC_PdfSigAppearance < Test::Unit::TestCase
     signature = Origami::Graphics::ImageXObject.from_image_file('test/dataset/sig.jpg', 'jpg')
 # Load stamp and add reference to the page
     signature_options = {
-        :scale => {x: 200, y: 72}
+        :scale => {x: 144, y: 70} # Scale width to be 2 inches, for grins.  Default PDF user space is 72 units per inch.
     }
-    signature.Width = signature_options[:scale][:x]
-    signature.Height = signature_options[:scale][:y]
-    signature.ColorSpace = Origami::Graphics::Color::Space::DEVICE_RGB
+    signature.Width = 596
+    signature.Height = 289
+    signature.ColorSpace = Origami::Graphics::Color::Space::DEVICE_GRAY
     signature.BitsPerComponent = 8
     signature.Interpolate = true
     n2.Resources.add_xobject(signature, Origami::Name.new("signature"))
@@ -67,7 +65,6 @@ class TC_PdfSigAppearance < Test::Unit::TestCase
     frm.Resources = Resources.new
     frm.Resources.ProcSet = [Origami::Name.new("PDF")]
     frm.FormType = 1
-    frm.Matrix = [1, 0, 0, 1, 0, 0]
     frm.Resources.add_xobject(n0, Origami::Name.new("n0"))
     frm.Resources.add_xobject(n2, Origami::Name.new("n2"))
     frm.BBox = [ 0, 0, box[:width], box[:height] ]
