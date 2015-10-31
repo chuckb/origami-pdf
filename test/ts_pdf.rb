@@ -14,6 +14,7 @@ require 'tc_pages.rb'
 require 'tc_actions.rb'
 require 'tc_annotations.rb'
 require 'tc_pdfnew.rb'
+require 'tc_xobject.rb'
 
 begin
   require 'origami'

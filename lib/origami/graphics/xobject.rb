@@ -364,7 +364,7 @@ module Origami
     def set_fill_color(color)
       load! if @instructions.nil?
       
-      @instructions << ( i =
+      ( i =
         if (color.respond_to? :r and color.respond_to? :g and color.respond_to? :b) or (color.is_a?(::Array) and color.size == 3)
           r = (color.respond_to?(:r) ? color.r : color[0]).to_f / 255
           g = (color.respond_to?(:g) ? color.g : color[1]).to_f / 255
@@ -387,6 +387,8 @@ module Origami
         end
       )
 
+      @instructions << i if i
+
       i.render(@canvas) if i
       self 
     end
@@ -394,7 +396,7 @@ module Origami
     def set_stroke_color(color)
       load! if @instructions.nil?
       
-      @instructions << ( i =
+      ( i =
         if (color.respond_to? :r and color.respond_to? :g and color.respond_to? :b) or (color.is_a?(::Array) and color.size == 3)
           r = (color.respond_to?(:r) ? color.r : color[0]).to_f / 255
           g = (color.respond_to?(:g) ? color.g : color[1]).to_f / 255
@@ -416,6 +418,8 @@ module Origami
           raise TypeError, "Invalid color : #{color}"
         end
       )
+
+      @instructions << i if i
 
       i.render(@canvas) if i
       self 
